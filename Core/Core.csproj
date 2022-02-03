@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Specifications\OrderByPaymentIntentWithItemsSpecification.cs" />
+    <Compile Remove="Specifications\OrdersWithItemsAndOrderingSpecification.cs" />
+  </ItemGroup>
+
+</Project>
