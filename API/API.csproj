@@ -80,6 +80,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ClientApp\src\app\core\interceptors\" />
     <Folder Include="ClientApp\src\app\shared\components\" />
     <Folder Include="Dtos\" />
     <Folder Include="Errors\" />
