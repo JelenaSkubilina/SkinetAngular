@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
@@ -57,8 +58,6 @@
 
   <ItemGroup>
     <Compile Remove="Extensions\ClaimsPrincipalExtensions.cs" />
-    <Compile Remove="Extensions\IdentityServiceExtensions.cs" />
-    <Compile Remove="Extensions\UserManagerExtensions.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -84,7 +83,6 @@
     <Folder Include="ClientApp\src\app\core\interceptors\" />
     <Folder Include="ClientApp\src\app\core\services\" />
     <Folder Include="ClientApp\src\app\shared\components\" />
-    <Folder Include="Dtos\" />
     <Folder Include="Errors\" />
     <Folder Include="Middleware\" />
     <Folder Include="Content\" />

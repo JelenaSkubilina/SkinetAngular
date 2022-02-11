@@ -1,6 +1,7 @@
 using API.Extensions;
 using API.Helpers;
 using Infrastructure.Data;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -27,6 +28,8 @@ namespace API
             services.AddControllers();
             services.AddDbContext<StoreContext>(x =>
                        x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infrastructure")));
+            services.AddDbContext<AppIdentityDbContext>(x =>
+                        x.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"), b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -36,6 +39,7 @@ namespace API
 
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddApplicationServices();
+            services.AddIdentityServices(Configuration);
             services.AddSwaggerDocumentation();
 
             // services.AddControllersWithViews();
@@ -69,7 +73,8 @@ namespace API
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             //app.UseEndpoints(endpoints =>
             //{
