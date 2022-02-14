@@ -57,10 +57,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Extensions\ClaimsPrincipalExtensions.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="ClientApp\src\app\counter\counter.component.html" />
     <None Remove="ClientApp\src\app\counter\counter.component.spec.ts" />
     <None Remove="ClientApp\src\app\counter\counter.component.ts" />
