@@ -30,6 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="6.0.1" />
     <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+    <PackageReference Include="Stripe.net" Version="39.91.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 

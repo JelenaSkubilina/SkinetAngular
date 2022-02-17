@@ -13,12 +13,15 @@ namespace Infrastructure.Services
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IPaymentService paymentService;
         private readonly IBasketRepository basketRepository;
 
         public OrderService(IUnitOfWork unitOfWork, 
+            IPaymentService paymentService,
             IBasketRepository basketRepository)
         {
             this.unitOfWork = unitOfWork;
+            this.paymentService = paymentService;
             this.basketRepository = basketRepository;
         }
 
@@ -41,15 +44,23 @@ namespace Infrastructure.Services
 
             var deliveryMethod = await unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
             var subtotal = items.Sum(item => item.Price * item.Quantity);
-            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, items, subtotal);
+
+            var spec = new OrderByPaymentIntentIdWithItemsSpecification(basket.PaymentIntentId);
+            var existingOrder = await unitOfWork.Repository<Order>().GetEntityWithSpec(spec);
+
+            if(existingOrder != null)
+            {
+                unitOfWork.Repository<Order>().Delete(existingOrder);
+                await paymentService.CreateOrUpdatePaymentIntent(basket.PaymentIntentId);
+            }
+
+            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, items, subtotal, basket.PaymentIntentId);
 
             unitOfWork.Repository<Order>().Add(order);
 
             var result = await unitOfWork.Complete();
 
             if(result <=0) return null;
-
-            await basketRepository.DeleteBasketAsync(basketId);
 
             return order;
         }
