@@ -28,6 +28,7 @@ import { Basket } from './models/basket';
     PaginationModule.forRoot(),
     CarouselModule.forRoot(),
     ReactiveFormsModule,
+    FormsModule,
     BsDropdownModule.forRoot(),
     CdkStepperModule,
     RouterModule
