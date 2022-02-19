@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
+using System.IO;
 
 namespace API
 {
@@ -26,10 +28,15 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            //services.AddDbContext<StoreContext>(x =>
+            //           x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infrastructure")));
+            //services.AddDbContext<AppIdentityDbContext>(x =>
+            //            x.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"), b => b.MigrationsAssembly("Infrastructure")));
+
             services.AddDbContext<StoreContext>(x =>
-                       x.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infrastructure")));
+                       x.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Infrastructure")));
             services.AddDbContext<AppIdentityDbContext>(x =>
-                        x.UseSqlServer(Configuration.GetConnectionString("IdentityConnection"), b => b.MigrationsAssembly("Infrastructure")));
+                        x.UseNpgsql(Configuration.GetConnectionString("IdentityConnection"), b => b.MigrationsAssembly("Infrastructure")));
 
             services.AddSingleton<IConnectionMultiplexer>(c =>
             {
@@ -65,29 +72,27 @@ namespace API
             }
 
             app.UseHttpsRedirection();
-            // app.UseStaticFiles();
-            //if (!env.IsDevelopment())
-            //{
-            //    app.UseSpaStaticFiles();
-            //}
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Content")
+                    ), RequestPath = "/content"
+            });
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllers();
-            //});
-
             app.UseSwaggerDocumentation();
 
             app.UseEndpoints(endpoints =>
                 {
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller}/{action=Index}/{id?}");
+                    endpoints.MapControllers();
+                  //  endpoints.MapFallbackToController("Index", "Fallback");
+                    //endpoints.MapControllerRoute(
+                    //    name: "default",
+                    //    pattern: "{controller}/{action=Index}/{id?}");
                 });
 
             app.UseSpa(spa =>

@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Stripe;
 using System;
@@ -17,13 +18,15 @@ namespace API.Controllers
     {
         private readonly IPaymentService paymentService;
         private readonly ILogger<PaymentController> logger;
-        private const string WhSecret = "whsec_60df50c6d0d40b116fb22764e394bc975a29c8262c2c283bb174060e01577886";
+        private readonly string WhSecret;
 
         public PaymentController(IPaymentService paymentService,
+            IConfiguration configuration,
             ILogger<PaymentController> logger)
         {
             this.paymentService = paymentService;
             this.logger = logger;
+            WhSecret = configuration.GetSection("StripeSection:WhSecret").Value;
         }
 
         [Authorize]
